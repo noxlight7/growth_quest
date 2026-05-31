@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django and Python
+env/
+venv/
+.env
+.env.production
+*.sqlite3
+
+# Node / React
+node_modules/
+frontend/.env
+frontend/node_modules/
+
+# Compiled output
+dist/
+build/
+
+# IDE settings
+.idea/
+
+# Logs
+*.log
+
+# Generated database backups
+backups/
+backend/backups/
