@@ -1,63 +1,115 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { LOCALE_LABELS, SUPPORTED_LOCALES } from '../i18n';
+import React from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-/**
- * Header component.
- *
- * Displays the application logo and navigation. If a user is
- * authenticated, a logout button is shown; otherwise a login button
- * appears. A “Home” link is positioned on the left.
- */
-function Header({ onLoginClick, onLogout, user, theme, onToggleTheme, locale, onLocaleChange, t }) {
+function Header({
+  onLoginClick,
+  onRegisterClick,
+  onLogout,
+  user,
+  theme,
+  onToggleTheme,
+  locale,
+  t,
+}) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isLanding = location.pathname === "/";
   const showAdminLink = user?.admin_level >= 2;
   const showModerationLink = user?.admin_level >= 1;
 
+  /* ─── Landing header ─── */
+  if (isLanding) {
+    return (
+      <header className="header header-landing">
+        <div className="header-left">
+          <Link className="landing-logo" to="/">
+            GQ
+          </Link>
+        </div>
+        <div className="header-right">
+          <button
+            className="theme-switch-landing"
+            type="button"
+            onClick={onToggleTheme}
+            title={theme === "dark" ? "Light mode" : "Dark mode"}
+          >
+            <span
+              className={`theme-switch-dot${theme === "dark" ? " theme-switch-dot-dark" : ""}`}
+            />
+            <span className="theme-switch-label">
+              {theme === "dark" ? "☀" : "☾"}
+            </span>
+          </button>
+
+          <div className="landing-auth-group">
+            {user ? (
+              <button
+                className="landing-nav-btn landing-nav-btn-primary"
+                type="button"
+                onClick={() => navigate("/dashboard")}
+              >
+                {t("header.dashboard")}&nbsp;&nbsp;→
+              </button>
+            ) : (
+              <>
+                <button
+                  className="landing-nav-btn"
+                  type="button"
+                  onClick={onRegisterClick}
+                >
+                  {t("header.signUp")}
+                </button>
+                <button
+                  className="landing-nav-btn landing-nav-btn-primary"
+                  type="button"
+                  onClick={onLoginClick}
+                >
+                  {t("header.signIn")}
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </header>
+    );
+  }
+
+  /* ─── App header ─── */
   return (
     <header className="header">
       <div className="header-left">
-        <Link className="play-button" to="/">
-          {t('header.home')}
+        <Link className="play-button" to={user ? "/dashboard" : "/"}>
+          {t("header.home")}
         </Link>
       </div>
       <div className="header-right">
         {showModerationLink && (
           <Link className="auth-button" to="/moderation">
-            {t('header.moderation')}
+            {t("header.moderation")}
           </Link>
         )}
         {showAdminLink && (
           <Link className="auth-button" to="/admin">
-            {t('header.admin')}
+            {t("header.admin")}
           </Link>
         )}
-        <label className="locale-control">
-          <span>{t('app.locale')}</span>
-          <select
-            className="locale-select"
-            value={locale}
-            onChange={(event) => onLocaleChange(event.target.value)}
-          >
-            {SUPPORTED_LOCALES.map((item) => (
-              <option key={item} value={item}>
-                {LOCALE_LABELS[item]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <button className="auth-button theme-toggle" type="button" onClick={onToggleTheme}>
-          {theme === 'dark' ? t('header.lightTheme') : t('header.darkTheme')}
+        <button
+          className="auth-button theme-toggle"
+          type="button"
+          onClick={onToggleTheme}
+        >
+          {theme === "dark" ? t("header.lightTheme") : t("header.darkTheme")}
         </button>
         {user ? (
           <>
             <span className="welcome">{user.username}</span>
             <button className="auth-button" onClick={onLogout}>
-              {t('header.logout')}
+              {t("header.logout")}
             </button>
           </>
         ) : (
           <button className="auth-button" onClick={onLoginClick}>
-            {t('header.login')}
+            {t("header.login")}
           </button>
         )}
       </div>

@@ -1,44 +1,40 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 
-/**
- * Register form component.
- *
- * Presents inputs for username, email, password and password confirmation.
- * When the form is submitted it calls the backend to create a new user,
- * then immediately obtains a JWT and fetches the user's profile. Upon
- * success, it invokes `onRegisterSuccess` with the user data.
- */
-function RegisterForm({ onClose, onSwitchToLogin, onRegisterSuccess, apiBaseUrl, t }) {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+function RegisterForm({
+  onClose,
+  onSwitchToLogin,
+  onRegisterSuccess,
+  apiBaseUrl,
+  t,
+}) {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     if (password !== confirmPassword) {
-      setError(t('auth.passwordMismatch'));
+      setError(t("auth.passwordMismatch"));
       return;
     }
     try {
-      // Create the user
       await axios.post(`${apiBaseUrl}/api/users/register/`, {
         username,
         email,
         password,
         password2: confirmPassword,
       });
-      // Auto‑login after registration
       const tokenResponse = await axios.post(`${apiBaseUrl}/api/auth/token/`, {
         username,
         password,
       });
       const { access, refresh } = tokenResponse.data;
-      localStorage.setItem('access', access);
-      localStorage.setItem('refresh', refresh);
+      localStorage.setItem("access", access);
+      localStorage.setItem("refresh", refresh);
       const userResponse = await axios.get(`${apiBaseUrl}/api/users/me/`, {
         headers: { Authorization: `Bearer ${access}` },
       });
@@ -48,71 +44,90 @@ function RegisterForm({ onClose, onSwitchToLogin, onRegisterSuccess, apiBaseUrl,
       if (data) {
         const firstKey = Object.keys(data)[0];
         const errorKeyByField = {
-          username: 'auth.usernameUnavailable',
-          email: 'auth.emailInvalidOrTaken',
-          password: 'auth.passwordRequirements',
-          password2: 'auth.passwordMismatch',
+          username: "auth.usernameUnavailable",
+          email: "auth.emailInvalidOrTaken",
+          password: "auth.passwordRequirements",
+          password2: "auth.passwordMismatch",
         };
-        setError(t(errorKeyByField[firstKey] || 'auth.registerError'));
+        setError(t(errorKeyByField[firstKey] || "auth.registerError"));
       } else {
-        setError(t('auth.registerError'));
+        setError(t("auth.registerError"));
       }
     }
   };
 
   return (
-    <div className="modal">
-      <div className="modal-content">
-        <button className="modal-close" onClick={onClose} aria-label={t('app.close')}>×</button>
-        <h3>{t('auth.registerTitle')}</h3>
-        {error && <p className="error-message">{error}</p>}
+    <div className="l-modal-overlay" onClick={onClose}>
+      <div className="l-modal" onClick={(e) => e.stopPropagation()}>
+        <button
+          className="l-modal-close"
+          onClick={onClose}
+          aria-label={t("app.close")}
+        >
+          ×
+        </button>
+
+        <h3 className="l-modal-title">{t("auth.registerTitle")}</h3>
+        <div className="l-modal-rule" />
+
+        {error && <div className="l-error">{error}</div>}
+
         <form onSubmit={handleSubmit}>
-          <label>
-            {t('auth.username')}
+          <div className="l-form-group">
+            <label className="l-label">{t("auth.username")}</label>
             <input
               type="text"
+              className="l-input"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
             />
-          </label>
-          <label>
-            {t('auth.email')}
+          </div>
+          <div className="l-form-group">
+            <label className="l-label">{t("auth.email")}</label>
             <input
               type="email"
+              className="l-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-          </label>
-          <label>
-            {t('auth.password')}
+          </div>
+          <div className="l-form-group">
+            <label className="l-label">{t("auth.password")}</label>
             <input
               type="password"
+              className="l-input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-          </label>
-          <label>
-            {t('auth.confirmPassword')}
+          </div>
+          <div className="l-form-group">
+            <label className="l-label">{t("auth.confirmPassword")}</label>
             <input
               type="password"
+              className="l-input"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
-          </label>
-          <button type="submit" className="submit-button">
-            {t('auth.submitRegister')}
+          </div>
+          <button type="submit" className="l-submit">
+            {t("auth.submitRegister")}
           </button>
         </form>
-        <p className="switch-form">
-          {t('auth.hasAccount')}{' '}
-          <button type="button" className="link-button" onClick={onSwitchToLogin}>
-            {t('auth.submitLogin')}
+
+        <div className="l-switch">
+          {t("auth.hasAccount")}{" "}
+          <button
+            type="button"
+            className="l-switch-btn"
+            onClick={onSwitchToLogin}
+          >
+            {t("auth.submitLogin")}
           </button>
-        </p>
+        </div>
       </div>
     </div>
   );

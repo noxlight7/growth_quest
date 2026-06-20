@@ -1,22 +1,28 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import axios from 'axios';
-import { BrowserRouter, Routes, Route, Navigate, useParams } from 'react-router-dom';
-import Header from './components/Header';
-import LoginForm from './components/LoginForm';
-import RegisterForm from './components/RegisterForm';
-import AdventureEditPage from './pages/AdventureEditPage';
-import GamePage from './pages/GamePage';
-import HeroSetupPage from './pages/HeroSetupPage';
-import AdventureLobbyPage from './pages/AdventureLobbyPage';
-import TemplatesPage from './pages/TemplatesPage';
-import AdminPage from './pages/AdminPage';
-import ModerationPage from './pages/ModerationPage';
-import GmDashboardPage from './pages/GmDashboardPage';
-import { createTranslator, getInitialLocale, normalizeLocale } from './i18n';
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import axios from "axios";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useParams,
+  useLocation,
+} from "react-router-dom";
+import Header from "./components/Header";
+import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
+import AdventureEditPage from "./pages/AdventureEditPage";
+import GamePage from "./pages/GamePage";
+import HeroSetupPage from "./pages/HeroSetupPage";
+import AdventureLobbyPage from "./pages/AdventureLobbyPage";
+import TemplatesPage from "./pages/TemplatesPage";
+import LandingPage from "./pages/LandingPage";
+import AdminPage from "./pages/AdminPage";
+import ModerationPage from "./pages/ModerationPage";
+import GmDashboardPage from "./pages/GmDashboardPage";
+import { createTranslator, normalizeLocale } from "./i18n";
 
-// Base URL for the API. This value can be overridden by providing
-// REACT_APP_API_URL in your environment (see .env.example).
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 function LegacyGmRouteRedirect() {
   const { id } = useParams();
@@ -24,28 +30,44 @@ function LegacyGmRouteRedirect() {
 }
 
 const getInitialTheme = () => {
-  if (typeof window === 'undefined') return 'light';
-  const storedTheme = localStorage.getItem('theme');
+  if (typeof window === "undefined") return "light";
+  const storedTheme = localStorage.getItem("theme");
   if (storedTheme) return storedTheme;
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    return 'dark';
-  }
-  return 'light';
+  if (
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  )
+    return "dark";
+  return "light";
+};
+
+/* ─── Auto-detect browser language ─── */
+const getBrowserLocale = () => {
+  const stored = localStorage.getItem("locale");
+  if (stored) return normalizeLocale(stored);
+  const lang = (
+    navigator.language ||
+    navigator.userLanguage ||
+    "en"
+  ).toLowerCase();
+  if (lang.startsWith("ru")) return "ru";
+  if (lang.startsWith("zh")) return "zh";
+  return "en";
 };
 
 const decodeJwtPayload = (token) => {
   try {
-    const payload = token.split('.')[1];
+    const payload = token.split(".")[1];
     if (!payload) return null;
-    const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
     const json = decodeURIComponent(
       atob(base64)
-        .split('')
-        .map((char) => `%${`00${char.charCodeAt(0).toString(16)}`.slice(-2)}`)
-        .join('')
+        .split("")
+        .map((c) => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`)
+        .join(""),
     );
     return JSON.parse(json);
-  } catch (error) {
+  } catch {
     return null;
   }
 };
@@ -53,59 +75,62 @@ const decodeJwtPayload = (token) => {
 const isTokenExpired = (token) => {
   const payload = decodeJwtPayload(token);
   if (!payload?.exp) return false;
-  const now = Math.floor(Date.now() / 1000);
-  return payload.exp <= now + 30;
+  return payload.exp <= Math.floor(Date.now() / 1000) + 30;
 };
 
-function App() {
+function ProtectedRoute({ user, children }) {
+  if (!user) return <Navigate to="/" replace />;
+  return children;
+}
+
+function AppContent() {
+  const location = useLocation();
+  const isLanding = location.pathname === "/";
+
   const [user, setUser] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [theme, setTheme] = useState(getInitialTheme);
-  const [locale, setLocale] = useState(getInitialLocale);
+  const [locale, setLocale] = useState(getBrowserLocale);
   const t = useMemo(() => createTranslator(locale), [locale]);
 
-  const handleLoginClick = () => {
+  const handleLoginClick = useCallback(() => {
     setShowLogin(true);
     setShowRegister(false);
-  };
-
+  }, []);
+  const handleRegisterClick = useCallback(() => {
+    setShowRegister(true);
+    setShowLogin(false);
+  }, []);
   const handleLogout = useCallback(() => {
-    localStorage.removeItem('access');
-    localStorage.removeItem('refresh');
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
     setUser(null);
   }, []);
-
-  const handleLoginSuccess = (data) => {
+  const handleLoginSuccess = useCallback((data) => {
     setUser(data.user);
     setShowLogin(false);
     setShowRegister(false);
-  };
-
-  const handleRegisterClick = () => {
-    setShowRegister(true);
-    setShowLogin(false);
-  };
-
-  const handleToggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
-  };
-
-  const handleLocaleChange = useCallback((nextLocale) => {
-    setLocale(normalizeLocale(nextLocale));
   }, []);
+  const handleToggleTheme = useCallback(
+    () => setTheme((p) => (p === "dark" ? "light" : "dark")),
+    [],
+  );
+  const handleLocaleChange = useCallback(
+    (next) => setLocale(normalizeLocale(next)),
+    [],
+  );
 
   const handleRefreshToken = useCallback(async () => {
-    const refresh = localStorage.getItem('refresh');
+    const refresh = localStorage.getItem("refresh");
     if (!refresh) return false;
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/auth/token/refresh/`, {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/token/refresh/`, {
         refresh,
       });
-      localStorage.setItem('access', response.data.access);
-      // Optionally update refresh token if the backend rotates it
+      localStorage.setItem("access", res.data.access);
       return true;
-    } catch (error) {
+    } catch {
       handleLogout();
       return false;
     }
@@ -113,41 +138,35 @@ function App() {
 
   const authRequest = useCallback(
     async (config) => {
-      let token = localStorage.getItem('access');
+      let token = localStorage.getItem("access");
       if (token && isTokenExpired(token)) {
-        const refreshed = await handleRefreshToken();
-        if (refreshed) {
-          token = localStorage.getItem('access');
-        }
+        const ok = await handleRefreshToken();
+        if (ok) token = localStorage.getItem("access");
       } else if (!token) {
-        const refreshed = await handleRefreshToken();
-        if (refreshed) {
-          token = localStorage.getItem('access');
-        }
+        const ok = await handleRefreshToken();
+        if (ok) token = localStorage.getItem("access");
       }
-      if (!token) {
-        throw new Error('No access token');
-      }
+      if (!token) throw new Error("No access token");
       try {
         return await axios({
           ...config,
           headers: {
             ...(config.headers || {}),
-            'Accept-Language': locale,
+            "Accept-Language": locale,
             Authorization: `Bearer ${token}`,
           },
         });
       } catch (error) {
         if (error.response?.status === 401) {
-          const refreshed = await handleRefreshToken();
-          if (refreshed) {
-            const retryToken = localStorage.getItem('access');
+          const ok = await handleRefreshToken();
+          if (ok) {
+            const retry = localStorage.getItem("access");
             return await axios({
               ...config,
               headers: {
                 ...(config.headers || {}),
-                'Accept-Language': locale,
-                Authorization: `Bearer ${retryToken}`,
+                "Accept-Language": locale,
+                Authorization: `Bearer ${retry}`,
               },
             });
           }
@@ -155,66 +174,78 @@ function App() {
         throw error;
       }
     },
-    [handleRefreshToken, locale]
+    [handleRefreshToken, locale],
   );
 
-  // On mount, check if there is a stored access token and fetch the current user
   useEffect(() => {
-    const token = localStorage.getItem('access');
+    const token = localStorage.getItem("access");
     if (!token) return;
-    const fetchUser = async () => {
+    (async () => {
       try {
-        const response = await authRequest({
-          method: 'get',
+        const r = await authRequest({
+          method: "get",
           url: `${API_BASE_URL}/api/users/me/`,
         });
-        setUser(response.data);
-      } catch (error) {
+        setUser(r.data);
+      } catch {
         setUser(null);
       }
-    };
-    fetchUser();
+    })();
   }, [authRequest]);
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
   }, [theme]);
-
   useEffect(() => {
-    document.documentElement.setAttribute('lang', locale);
-    localStorage.setItem('locale', locale);
+    document.documentElement.setAttribute("lang", locale);
+    localStorage.setItem("locale", locale);
   }, [locale]);
 
   return (
-    <BrowserRouter>
-      <div className="App">
-        <Header
-          onLoginClick={handleLoginClick}
-          onLogout={handleLogout}
-          onToggleTheme={handleToggleTheme}
-          theme={theme}
-          locale={locale}
-          onLocaleChange={handleLocaleChange}
-          t={t}
-          user={user}
-        />
-        <main className="container">
-          <Routes>
-            <Route
-              path="/"
-              element={
+    <div className="App">
+      <Header
+        onLoginClick={handleLoginClick}
+        onRegisterClick={handleRegisterClick}
+        onLogout={handleLogout}
+        onToggleTheme={handleToggleTheme}
+        theme={theme}
+        locale={locale}
+        onLocaleChange={handleLocaleChange}
+        t={t}
+        user={user}
+      />
+      <main className={isLanding ? "" : "container"}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <LandingPage
+                locale={locale}
+                user={user}
+                t={t}
+                onLoginClick={handleLoginClick}
+                onRegisterClick={handleRegisterClick}
+              />
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute user={user}>
                 <TemplatesPage
                   user={user}
                   apiBaseUrl={API_BASE_URL}
                   authRequest={authRequest}
                   t={t}
                 />
-              }
-            />
-            <Route
-              path="/adventures/:id/edit"
-              element={
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/adventures/:id/edit"
+            element={
+              <ProtectedRoute user={user}>
                 <AdventureEditPage
                   user={user}
                   apiBaseUrl={API_BASE_URL}
@@ -222,11 +253,13 @@ function App() {
                   locale={locale}
                   t={t}
                 />
-              }
-            />
-            <Route
-              path="/adventures/runs/:id/edit"
-              element={
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/adventures/runs/:id/edit"
+            element={
+              <ProtectedRoute user={user}>
                 <AdventureEditPage
                   user={user}
                   apiBaseUrl={API_BASE_URL}
@@ -235,19 +268,38 @@ function App() {
                   locale={locale}
                   t={t}
                 />
-              }
-            />
-            <Route
-              path="/adventures/:id/hero"
-              element={<HeroSetupPage apiBaseUrl={API_BASE_URL} authRequest={authRequest} locale={locale} t={t} />}
-            />
-            <Route
-              path="/adventures/:id/lobby"
-              element={<AdventureLobbyPage apiBaseUrl={API_BASE_URL} authRequest={authRequest} t={t} />}
-            />
-            <Route
-              path="/adventures/:id/play"
-              element={
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/adventures/:id/hero"
+            element={
+              <ProtectedRoute user={user}>
+                <HeroSetupPage
+                  apiBaseUrl={API_BASE_URL}
+                  authRequest={authRequest}
+                  locale={locale}
+                  t={t}
+                />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/adventures/:id/lobby"
+            element={
+              <ProtectedRoute user={user}>
+                <AdventureLobbyPage
+                  apiBaseUrl={API_BASE_URL}
+                  authRequest={authRequest}
+                  t={t}
+                />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/adventures/:id/play"
+            element={
+              <ProtectedRoute user={user}>
                 <GamePage
                   apiBaseUrl={API_BASE_URL}
                   authRequest={authRequest}
@@ -255,58 +307,93 @@ function App() {
                   onLocaleChange={handleLocaleChange}
                   t={t}
                 />
-              }
-            />
-            <Route
-              path="/adventures/:id/gm"
-              element={
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/adventures/:id/gm"
+            element={
+              <ProtectedRoute user={user}>
                 <GmDashboardPage
                   apiBaseUrl={API_BASE_URL}
                   authRequest={authRequest}
                   t={t}
                 />
-              }
-            />
-            <Route path="/adventures/:id/facilitator" element={<LegacyGmRouteRedirect />} />
-            <Route path="/adventures/:id/teacher" element={<LegacyGmRouteRedirect />} />
-            <Route
-              path="/admin"
-              element={
-                <AdminPage user={user} apiBaseUrl={API_BASE_URL} authRequest={authRequest} t={t} />
-              }
-            />
-            <Route
-              path="/moderation"
-              element={
-                <ModerationPage user={user} apiBaseUrl={API_BASE_URL} authRequest={authRequest} locale={locale} t={t} />
-              }
-            />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
-        {showLogin && (
-          <div className="modal-overlay">
-            <LoginForm
-              onClose={() => setShowLogin(false)}
-              onSwitchToRegister={handleRegisterClick}
-              onLoginSuccess={handleLoginSuccess}
-              apiBaseUrl={API_BASE_URL}
-              t={t}
-            />
-          </div>
-        )}
-        {showRegister && (
-          <div className="modal-overlay">
-            <RegisterForm
-              onClose={() => setShowRegister(false)}
-              onSwitchToLogin={handleLoginClick}
-              onRegisterSuccess={handleLoginSuccess}
-              apiBaseUrl={API_BASE_URL}
-              t={t}
-            />
-          </div>
-        )}
-      </div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/adventures/:id/facilitator"
+            element={
+              <ProtectedRoute user={user}>
+                <LegacyGmRouteRedirect />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/adventures/:id/teacher"
+            element={
+              <ProtectedRoute user={user}>
+                <LegacyGmRouteRedirect />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute user={user}>
+                <AdminPage
+                  user={user}
+                  apiBaseUrl={API_BASE_URL}
+                  authRequest={authRequest}
+                  t={t}
+                />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/moderation"
+            element={
+              <ProtectedRoute user={user}>
+                <ModerationPage
+                  user={user}
+                  apiBaseUrl={API_BASE_URL}
+                  authRequest={authRequest}
+                  locale={locale}
+                  t={t}
+                />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+      {showLogin && (
+        <LoginForm
+          onClose={() => setShowLogin(false)}
+          onSwitchToRegister={handleRegisterClick}
+          onLoginSuccess={handleLoginSuccess}
+          apiBaseUrl={API_BASE_URL}
+          t={t}
+        />
+      )}
+      {showRegister && (
+        <RegisterForm
+          onClose={() => setShowRegister(false)}
+          onSwitchToLogin={handleLoginClick}
+          onRegisterSuccess={handleLoginSuccess}
+          apiBaseUrl={API_BASE_URL}
+          t={t}
+        />
+      )}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   );
 }
