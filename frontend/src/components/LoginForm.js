@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 function LoginForm({
+  isShow,
   onClose,
   onSwitchToRegister,
   onLoginSuccess,
@@ -31,6 +32,8 @@ function LoginForm({
       setError(t("auth.badCredentials"));
     }
   };
+
+  if (!isShow) return null;
 
   return (
     <div className="l-modal-overlay" onClick={onClose}>

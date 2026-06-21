@@ -366,24 +366,22 @@ function AppContent() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-      {showLogin && (
-        <LoginForm
-          onClose={() => setShowLogin(false)}
-          onSwitchToRegister={handleRegisterClick}
-          onLoginSuccess={handleLoginSuccess}
-          apiBaseUrl={API_BASE_URL}
-          t={t}
-        />
-      )}
-      {showRegister && (
-        <RegisterForm
-          onClose={() => setShowRegister(false)}
-          onSwitchToLogin={handleLoginClick}
-          onRegisterSuccess={handleLoginSuccess}
-          apiBaseUrl={API_BASE_URL}
-          t={t}
-        />
-      )}
+      <LoginForm
+        isShow={showLogin}
+        onClose={() => setShowLogin(false)}
+        onSwitchToRegister={handleRegisterClick}
+        onLoginSuccess={handleLoginSuccess}
+        apiBaseUrl={API_BASE_URL}
+        t={t}
+      />
+      <RegisterForm
+        isShow={showRegister}
+        onClose={() => setShowRegister(false)}
+        onSwitchToLogin={handleLoginClick}
+        onRegisterSuccess={handleLoginSuccess}
+        apiBaseUrl={API_BASE_URL}
+        t={t}
+      />
     </div>
   );
 }

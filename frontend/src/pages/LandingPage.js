@@ -172,11 +172,7 @@ function LandingPage({ user, t, onLoginClick, onRegisterClick }) {
           </h2>
           <div className="feature-list">
             {features.map(([label, desc], i) => (
-              <div
-                className="feature-row"
-                key={i}
-                style={{ transitionDelay: `${i * 0.07}s` }}
-              >
+              <div className="feature-row" key={i}>
                 <span className="feature-label">{label}</span>
                 <span className="feature-desc">{desc}</span>
               </div>

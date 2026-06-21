@@ -1217,14 +1217,25 @@ body, html {
   gap: 2rem;
   opacity: 0;
   transform: translateX(20px);
-  transition: opacity 0.6s ease,
-              transform 0.6s ease,
-              border-bottom-color 0.3s ease;
+  transition: border-bottom-color 0.2s ease;
 }
 
 .landing-section.visible .feature-row {
-  opacity: 1;
-  transform: translateX(0);
+  animation: featureSlideIn 0.6s ease forwards;
+}
+
+.landing-section.visible .feature-row:nth-child(1) { animation-delay: 0s; }
+.landing-section.visible .feature-row:nth-child(2) { animation-delay: 0.07s; }
+.landing-section.visible .feature-row:nth-child(3) { animation-delay: 0.14s; }
+.landing-section.visible .feature-row:nth-child(4) { animation-delay: 0.21s; }
+.landing-section.visible .feature-row:nth-child(5) { animation-delay: 0.28s; }
+.landing-section.visible .feature-row:nth-child(6) { animation-delay: 0.35s; }
+
+@keyframes featureSlideIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .feature-row:hover {

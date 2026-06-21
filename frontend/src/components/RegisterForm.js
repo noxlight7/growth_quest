@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 function RegisterForm({
+  isShow,
   onClose,
   onSwitchToLogin,
   onRegisterSuccess,
@@ -55,6 +56,8 @@ function RegisterForm({
       }
     }
   };
+
+  if (!isShow) return null;
 
   return (
     <div className="l-modal-overlay" onClick={onClose}>
