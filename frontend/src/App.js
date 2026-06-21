@@ -210,7 +210,6 @@ function AppContent() {
         onLogout={handleLogout}
         onToggleTheme={handleToggleTheme}
         theme={theme}
-        locale={locale}
         onLocaleChange={handleLocaleChange}
         t={t}
         user={user}
@@ -221,7 +220,6 @@ function AppContent() {
             path="/"
             element={
               <LandingPage
-                locale={locale}
                 user={user}
                 t={t}
                 onLoginClick={handleLoginClick}

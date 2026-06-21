@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-function LandingPage({ locale, user, t, onLoginClick, onRegisterClick }) {
+function LandingPage({ user, t, onLoginClick, onRegisterClick }) {
   const navigate = useNavigate();
   const mountedRef = useRef(true);
 
@@ -11,7 +11,7 @@ function LandingPage({ locale, user, t, onLoginClick, onRegisterClick }) {
     letters.forEach((el, i) => {
       el.style.animationDelay = `${i * 0.07 + 0.3}s`;
     });
-  }, [locale]);
+  }, []);
 
   /* Intersection observer */
   useEffect(() => {

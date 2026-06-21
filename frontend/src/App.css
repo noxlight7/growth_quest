@@ -1424,8 +1424,8 @@ body, html {
 
 .landing-auth-group {
   display: flex;
-  gap: 0.75rem;
-  margin-left: 1.5rem;
+  gap: 0.5rem;
+  margin-left: 1rem;
 }
 
 .theme-switch-dot {
@@ -1539,6 +1539,10 @@ body, html {
 
   .hero-scroll {
     left: 6vw;
+  }
+
+  .landing-auth-group .landing-nav-btn:not(.landing-nav-btn-primary) {
+    display: none;
   }
 }
 

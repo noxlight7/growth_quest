@@ -8,7 +8,6 @@ function Header({
   user,
   theme,
   onToggleTheme,
-  locale,
   t,
 }) {
   const location = useLocation();
