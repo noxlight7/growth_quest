@@ -6,7 +6,6 @@ import {
   Route,
   Navigate,
   useParams,
-  useLocation,
 } from "react-router-dom";
 import Header from "./components/Header";
 import LoginForm from "./components/LoginForm";
@@ -84,10 +83,11 @@ function ProtectedRoute({ user, children }) {
 }
 
 function AppContent() {
-  const location = useLocation();
-  const isLanding = location.pathname === "/";
-
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({
+    id: 11,
+    username: "Sasha",
+    email: "check@yandex.ru",
+  });
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [theme, setTheme] = useState(getInitialTheme);
@@ -214,7 +214,7 @@ function AppContent() {
         t={t}
         user={user}
       />
-      <main className={isLanding ? "" : "container"}>
+      <main>
         <Routes>
           <Route
             path="/"

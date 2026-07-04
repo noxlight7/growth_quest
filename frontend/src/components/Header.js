@@ -73,44 +73,60 @@ function Header({
     );
   }
 
-  /* ─── App header ─── */
+  /* ─── App header (внутренний) ─── */
   return (
-    <header className="header">
+    <header className="header header-app">
       <div className="header-left">
-        <Link className="play-button" to={user ? "/dashboard" : "/"}>
-          {t("header.home")}
+        <Link className="app-logo" to={user ? "/dashboard" : "/"}>
+          GQ
         </Link>
       </div>
       <div className="header-right">
         {showModerationLink && (
-          <Link className="auth-button" to="/moderation">
+          <Link className="app-nav-btn" to="/moderation">
             {t("header.moderation")}
           </Link>
         )}
         {showAdminLink && (
-          <Link className="auth-button" to="/admin">
+          <Link className="app-nav-btn" to="/admin">
             {t("header.admin")}
           </Link>
         )}
+
         <button
-          className="auth-button theme-toggle"
+          className="theme-switch-landing"
           type="button"
           onClick={onToggleTheme}
+          title={theme === "dark" ? "Light mode" : "Dark mode"}
         >
-          {theme === "dark" ? t("header.lightTheme") : t("header.darkTheme")}
+          <span
+            className={`theme-switch-dot${theme === "dark" ? " theme-switch-dot-dark" : ""}`}
+          />
+          <span className="theme-switch-label">
+            {theme === "dark" ? "☀" : "☾"}
+          </span>
         </button>
-        {user ? (
-          <>
-            <span className="welcome">{user.username}</span>
-            <button className="auth-button" onClick={onLogout}>
-              {t("header.logout")}
+
+        <div className="landing-auth-group">
+          {user ? (
+            <>
+              <span className="app-welcome">{user.username}</span>
+              <button
+                className="app-nav-btn app-nav-btn-primary"
+                onClick={onLogout}
+              >
+                {t("header.logout")}
+              </button>
+            </>
+          ) : (
+            <button
+              className="app-nav-btn app-nav-btn-primary"
+              onClick={onLoginClick}
+            >
+              {t("header.login")}
             </button>
-          </>
-        ) : (
-          <button className="auth-button" onClick={onLoginClick}>
-            {t("header.login")}
-          </button>
-        )}
+          )}
+        </div>
       </div>
     </header>
   );
