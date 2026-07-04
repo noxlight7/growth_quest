@@ -83,11 +83,7 @@ function ProtectedRoute({ user, children }) {
 }
 
 function AppContent() {
-  const [user, setUser] = useState({
-    id: 11,
-    username: "Sasha",
-    email: "check@yandex.ru",
-  });
+  const [user, setUser] = useState();
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [theme, setTheme] = useState(getInitialTheme);
