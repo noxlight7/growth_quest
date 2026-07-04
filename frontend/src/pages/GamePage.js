@@ -343,7 +343,7 @@ function GamePage({ apiBaseUrl, authRequest, locale, onLocaleChange, t }) {
   const canViewGmDashboard = growthSummary?.can_view_gm_dashboard;
 
   return (
-    <div className="game-page">
+    <div className="game-page app-workspace app-workspace-wide">
       <aside className="game-sidebar">
         <h3>{t('game.growth')}</h3>
         <div className="learning-panel">
@@ -414,6 +414,15 @@ function GamePage({ apiBaseUrl, authRequest, locale, onLocaleChange, t }) {
         ))}
       </aside>
       <section className="game-main">
+        <div className="game-stage-header">
+          <div>
+            <span className="dashboard-kick">{t('app.play')}</span>
+            <h1 className="app-page-title">{runInfo?.title || t('game.growth')}</h1>
+          </div>
+          <div className="template-meta">
+            {history.length ? t('game.historyCount', { count: history.length }) : t('game.emptyHistory')}
+          </div>
+        </div>
         <div className="history-panel">
           {history.length === 0 && <p className="templates-empty">{t('game.emptyHistory')}</p>}
           {history.map((entry) => (

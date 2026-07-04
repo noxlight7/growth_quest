@@ -74,10 +74,11 @@ function GmDashboardPage({ apiBaseUrl, authRequest, t }) {
   }
 
   return (
-    <div className="teacher-dashboard">
-      <div className="teacher-header">
+    <div className="teacher-dashboard app-workspace">
+      <div className="teacher-header app-page-top">
         <div>
-          <h2>{t('teacher.title')}</h2>
+          <span className="dashboard-kick">{t('game.gmDashboard')}</span>
+          <h1 className="app-page-title">{t('teacher.title')}</h1>
         </div>
         <button className="secondary-button" type="button" onClick={handlePortfolioExport}>
           {t('teacher.export')}

@@ -200,8 +200,11 @@ function AdventureLobbyPage({ apiBaseUrl, authRequest, t }) {
 
   if (loading) {
     return (
-      <div className="templates-page">
-        <h2>{t('lobby.title')}</h2>
+      <div className="lobby-page app-workspace">
+        <div className="app-page-top">
+          <span className="dashboard-kick">{t('templates.lobby')}</span>
+          <h1 className="app-page-title">{t('lobby.title')}</h1>
+        </div>
         {error && <div className="error-message">{error}</div>}
         <p>{t('app.loading')}</p>
       </div>
@@ -210,8 +213,11 @@ function AdventureLobbyPage({ apiBaseUrl, authRequest, t }) {
 
   if (!lobby) {
     return (
-      <div className="templates-page">
-        <h2>{t('lobby.title')}</h2>
+      <div className="lobby-page app-workspace">
+        <div className="app-page-top">
+          <span className="dashboard-kick">{t('templates.lobby')}</span>
+          <h1 className="app-page-title">{t('lobby.title')}</h1>
+        </div>
         {error && <div className="error-message">{error}</div>}
         <p>{t('lobby.notFound')}</p>
       </div>
@@ -228,10 +234,13 @@ function AdventureLobbyPage({ apiBaseUrl, authRequest, t }) {
     : t('lobby.notSetPlural');
 
   return (
-    <div className="templates-page lobby-page">
-      <section className="templates-section">
+    <div className="lobby-page app-workspace">
+      <section className="templates-section lobby-hero-section">
         <div className="templates-header">
-          <h3>{t('lobby.title')}</h3>
+          <div>
+            <span className="dashboard-kick">{t('templates.lobby')}</span>
+            <h1 className="app-page-title">{t('lobby.title')}</h1>
+          </div>
           <div className="templates-actions">
             {lobby.is_owner && !isStarted && (
               <button
@@ -251,7 +260,7 @@ function AdventureLobbyPage({ apiBaseUrl, authRequest, t }) {
           </div>
         </div>
         {error && <div className="error-message">{error}</div>}
-        <article className="template-card">
+        <article className="template-card lobby-summary-card">
           <h4>{adventure.title}</h4>
           {adventure.description && <p>{adventure.description}</p>}
           <div className="template-meta">
@@ -267,7 +276,7 @@ function AdventureLobbyPage({ apiBaseUrl, authRequest, t }) {
         <div className="templates-header">
           <h3>{t('lobby.inviteLink')}</h3>
         </div>
-        <div className="template-card">
+        <div className="template-card lobby-invite-card">
           <div className="lobby-invite">
             <input value={inviteUrl} readOnly />
             <button

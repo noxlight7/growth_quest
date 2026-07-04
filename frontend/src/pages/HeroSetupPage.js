@@ -247,8 +247,13 @@ function HeroSetupPage({ apiBaseUrl, authRequest, locale, t }) {
 
   if (!bootstrap) {
     return (
-      <div className="hero-setup">
-        <h2>{t(isNpcSlot ? 'heroSetup.npcTitle' : 'heroSetup.avatarTitle')}</h2>
+      <div className="hero-setup app-workspace">
+        <div className="app-page-top">
+          <span className="dashboard-kick">{t('templates.lobby')}</span>
+          <h1 className="app-page-title">
+            {t(isNpcSlot ? 'heroSetup.npcTitle' : 'heroSetup.avatarTitle')}
+          </h1>
+        </div>
         {error && <div className="error-message">{error}</div>}
         <p>{t('app.loading')}</p>
       </div>
@@ -264,286 +269,322 @@ function HeroSetupPage({ apiBaseUrl, authRequest, locale, t }) {
   const formLocked = !isNpcSlot && Boolean(playerSlot?.hero_id);
 
   return (
-    <div className="hero-setup">
-      <h2>{t(isNpcSlot ? 'heroSetup.npcTitle' : 'heroSetup.avatarTitle')}</h2>
-      {error && <div className="error-message">{error}</div>}
-      {!isNpcSlot && playerSlot?.hero_id && (
-        <div className="template-meta">{t('heroSetup.avatarSelected', { avatar: playerSlot.hero_title })}</div>
-      )}
-      {locationLocked ? (
-        <div className="template-meta">
-          {t('heroSetup.startLocation', { location: sharedLocation?.title || t('heroSetup.templateDefault') })}
+    <div className="hero-setup app-workspace">
+      <div className="app-page-top hero-setup-top">
+        <div>
+          <span className="dashboard-kick">{t('templates.lobby')}</span>
+          <h1 className="app-page-title">
+            {t(isNpcSlot ? 'heroSetup.npcTitle' : 'heroSetup.avatarTitle')}
+          </h1>
         </div>
-      ) : (
-        <label>
-          {t('editor.startLocation')}
-          <select
-            value={locationId}
-            onChange={(event) => setLocationId(event.target.value)}
-            disabled={formLocked}
-          >
-            <option value="">{t('editor.selectLocation')}</option>
-            {sortedLocations.map((location) => (
-              <option key={location.id} value={location.id}>
-                {location.title}
-              </option>
-            ))}
-          </select>
-        </label>
-      )}
-      {availableHeroes.length > 0 && (
-        <div className="editor-subsection">
-          <h3>{t(isNpcSlot ? 'heroSetup.availableCharacters' : 'heroSetup.availableHeroes')}</h3>
-          {availableHeroes.map((heroItem) => (
-            <div className="template-card" key={heroItem.id}>
-              <strong>{heroItem.title}</strong>
+        <button
+          className="secondary-button"
+          type="button"
+          onClick={() => navigate(`/adventures/${runId}/lobby`)}
+        >
+          {t('heroSetup.backToLobby')}
+        </button>
+      </div>
+      {error && <div className="error-message">{error}</div>}
+
+      <div className="hero-setup-layout">
+        <aside className="hero-setup-aside">
+          <section className="hero-setup-panel">
+            <h3>{t('editor.startLocation')}</h3>
+            {!isNpcSlot && playerSlot?.hero_id && (
               <div className="template-meta">
-                {t(heroItem.is_primary ? 'heroSetup.primaryHero' : 'heroSetup.avatar')}
+                {t('heroSetup.avatarSelected', { avatar: playerSlot.hero_title })}
               </div>
-              {isNpcSlot && (
-                <div className="template-meta">
-                  {t(heroItem.is_player ? 'heroSetup.playerCharacter' : 'heroSetup.npc')}
-                </div>
-              )}
-              <div className="template-actions">
-                {heroItem.is_taken ? (
-                  <span className="template-meta">{t('heroSetup.taken')}</span>
-                ) : (
-                  <button
-                    className="secondary-button"
-                    type="button"
-                    onClick={() => handleSelectHero(heroItem.id)}
-                    disabled={formLocked || selectingHeroId === heroItem.id}
-                  >
-                    {t('app.select')}
-                  </button>
+            )}
+            {locationLocked ? (
+              <div className="template-meta">
+                {t('heroSetup.startLocation', {
+                  location: sharedLocation?.title || t('heroSetup.templateDefault'),
+                })}
+              </div>
+            ) : (
+              <label>
+                {t('editor.startLocation')}
+                <select
+                  value={locationId}
+                  onChange={(event) => setLocationId(event.target.value)}
+                  disabled={formLocked}
+                >
+                  <option value="">{t('editor.selectLocation')}</option>
+                  {sortedLocations.map((location) => (
+                    <option key={location.id} value={location.id}>
+                      {location.title}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+          </section>
+
+          {availableHeroes.length > 0 && (
+            <section className="hero-setup-panel">
+              <h3>{t(isNpcSlot ? 'heroSetup.availableCharacters' : 'heroSetup.availableHeroes')}</h3>
+              <div className="hero-card-list">
+                {availableHeroes.map((heroItem) => (
+                  <div className="template-card" key={heroItem.id}>
+                    <strong>{heroItem.title}</strong>
+                    <div className="template-meta">
+                      {t(heroItem.is_primary ? 'heroSetup.primaryHero' : 'heroSetup.avatar')}
+                    </div>
+                    {isNpcSlot && (
+                      <div className="template-meta">
+                        {t(heroItem.is_player ? 'heroSetup.playerCharacter' : 'heroSetup.npc')}
+                      </div>
+                    )}
+                    <div className="template-actions">
+                      {heroItem.is_taken ? (
+                        <span className="template-meta">{t('heroSetup.taken')}</span>
+                      ) : (
+                        <button
+                          className="secondary-button"
+                          type="button"
+                          onClick={() => handleSelectHero(heroItem.id)}
+                          disabled={formLocked || selectingHeroId === heroItem.id}
+                        >
+                          {t('app.select')}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+        </aside>
+
+        <form className="editor-form hero-setup-form" onSubmit={handleSubmit}>
+          <div className="editor-subsection hero-identity-section">
+            <h3>{t(isNpcSlot ? 'heroSetup.npcName' : 'heroSetup.avatarName')}</h3>
+            <label>
+              {t(isNpcSlot ? 'heroSetup.npcName' : 'heroSetup.avatarName')}
+              <input
+                value={hero.title}
+                onChange={(event) => setHero((prev) => ({ ...prev, title: event.target.value }))}
+                disabled={formLocked}
+              />
+            </label>
+            {heroSetup.require_race && (
+              <label>
+                {t('editor.race')}
+                <select
+                  value={hero.race}
+                  onChange={(event) => setHero((prev) => ({ ...prev, race: event.target.value }))}
+                  disabled={formLocked}
+                >
+                  <option value="">{t('editor.notSelected')}</option>
+                  {sortedRaces.map((race) => (
+                    <option key={race.id} value={race.id}>
+                      {race.title}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+            {heroSetup.require_age && (
+              <label>
+                {t('editor.age')}
+                <input
+                  type="number"
+                  min="0"
+                  value={hero.age}
+                  onChange={(event) => setHero((prev) => ({ ...prev, age: event.target.value }))}
+                  disabled={formLocked}
+                />
+              </label>
+            )}
+            {(heroSetup.require_body_power ||
+              heroSetup.require_mind_power ||
+              heroSetup.require_will_power) && (
+              <div className="form-row">
+                {heroSetup.require_body_power && (
+                  <label>
+                    {t('editor.bodyPower')}
+                    <input
+                      type="number"
+                      min="0"
+                      value={hero.body_power}
+                      onChange={(event) =>
+                        setHero((prev) => ({ ...prev, body_power: event.target.value }))
+                      }
+                      disabled={formLocked}
+                    />
+                  </label>
+                )}
+                {heroSetup.require_mind_power && (
+                  <label>
+                    {t('editor.mindPower')}
+                    <input
+                      type="number"
+                      min="0"
+                      value={hero.mind_power}
+                      onChange={(event) =>
+                        setHero((prev) => ({ ...prev, mind_power: event.target.value }))
+                      }
+                      disabled={formLocked}
+                    />
+                  </label>
+                )}
+                {heroSetup.require_will_power && (
+                  <label>
+                    {t('editor.willPower')}
+                    <input
+                      type="number"
+                      min="0"
+                      value={hero.will_power}
+                      onChange={(event) =>
+                        setHero((prev) => ({ ...prev, will_power: event.target.value }))
+                      }
+                      disabled={formLocked}
+                    />
+                  </label>
                 )}
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-      <form className="editor-form" onSubmit={handleSubmit}>
-        <label>
-          {t(isNpcSlot ? 'heroSetup.npcName' : 'heroSetup.avatarName')}
-          <input
-            value={hero.title}
-            onChange={(event) => setHero((prev) => ({ ...prev, title: event.target.value }))}
-            disabled={formLocked}
-          />
-        </label>
-        {heroSetup.require_race && (
-          <label>
-            {t('editor.race')}
-            <select
-              value={hero.race}
-              onChange={(event) => setHero((prev) => ({ ...prev, race: event.target.value }))}
-              disabled={formLocked}
-            >
-              <option value="">{t('editor.notSelected')}</option>
-              {sortedRaces.map((race) => (
-                <option key={race.id} value={race.id}>
-                  {race.title}
-                </option>
-              ))}
-            </select>
-          </label>
-        )}
-        {heroSetup.require_age && (
-          <label>
-            {t('editor.age')}
-            <input
-              type="number"
-              min="0"
-              value={hero.age}
-              onChange={(event) => setHero((prev) => ({ ...prev, age: event.target.value }))}
-              disabled={formLocked}
-            />
-          </label>
-        )}
-        {(heroSetup.require_body_power ||
-          heroSetup.require_mind_power ||
-          heroSetup.require_will_power) && (
-          <div className="form-row">
-            {heroSetup.require_body_power && (
-              <label>
-                {t('editor.bodyPower')}
-                <input
-                  type="number"
-                  min="0"
-                  value={hero.body_power}
-                  onChange={(event) =>
-                    setHero((prev) => ({ ...prev, body_power: event.target.value }))
-                  }
-                  disabled={formLocked}
-                />
-              </label>
-            )}
-            {heroSetup.require_mind_power && (
-              <label>
-                {t('editor.mindPower')}
-                <input
-                  type="number"
-                  min="0"
-                  value={hero.mind_power}
-                  onChange={(event) =>
-                    setHero((prev) => ({ ...prev, mind_power: event.target.value }))
-                  }
-                  disabled={formLocked}
-                />
-              </label>
-            )}
-            {heroSetup.require_will_power && (
-              <label>
-                {t('editor.willPower')}
-                <input
-                  type="number"
-                  min="0"
-                  value={hero.will_power}
-                  onChange={(event) =>
-                    setHero((prev) => ({ ...prev, will_power: event.target.value }))
-                  }
-                  disabled={formLocked}
-                />
-              </label>
             )}
           </div>
-        )}
-        <div className="editor-subsection">
-          <h3>{t('editor.systemKnowledge')}</h3>
-          {systemEntries.map((entry, index) => (
-            <div className="form-row" key={`system-${index}`}>
-              <label>
-                {t('editor.system')}
-                <select
-                  value={entry.system}
-                  onChange={(event) => handleSystemChange(index, 'system', event.target.value)}
-                  disabled={formLocked}
-                >
-                  <option value="">{t('editor.selectSystem')}</option>
-                  {sortedSystems.map((system) => (
-                    <option key={system.id} value={system.id}>
-                      {system.title}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                {t('editor.level')}
-                <input
-                  type="number"
-                  min="0"
-                  value={entry.level}
-                  onChange={(event) => handleSystemChange(index, 'level', event.target.value)}
-                  disabled={formLocked}
-                />
-              </label>
-              <label>
-                {t('editor.progressPercent')}
-                <input
-                  type="number"
-                  min="0"
-                  max="100"
-                  value={entry.progress_percent}
-                  onChange={(event) =>
-                    handleSystemChange(index, 'progress_percent', event.target.value)
-                  }
-                  disabled={formLocked}
-                />
-              </label>
-              <label>
-                {t('editor.notes')}
-                <input
-                  value={entry.notes}
-                  onChange={(event) => handleSystemChange(index, 'notes', event.target.value)}
-                  disabled={formLocked}
-                />
-              </label>
-            </div>
-          ))}
-          <button
-            className="secondary-button"
-            type="button"
-            onClick={() => setSystemEntries((prev) => [...prev, { ...emptySystemEntry }])}
-            disabled={formLocked}
-          >
-            {t('heroSetup.addSystem')}
-          </button>
-        </div>
-        <div className="editor-subsection">
-          <h3>{t('editor.learnedTechniques')}</h3>
-          {techniqueEntries.map((entry, index) => (
-            <div className="form-row" key={`technique-${index}`}>
-              <label>
-                {t('editor.system')}
-                <select
-                  value={entry.system}
-                  onChange={(event) => handleTechniqueChange(index, 'system', event.target.value)}
-                  disabled={formLocked}
-                >
-                  <option value="">{t('editor.selectSystem')}</option>
-                  {availableSystemIds.map((systemId) => (
-                    <option key={systemId} value={systemId}>
-                      {systemsById[systemId]?.title || '—'}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                {t('editor.technique')}
-                <select
-                  value={entry.technique}
-                  onChange={(event) =>
-                    handleTechniqueChange(index, 'technique', event.target.value)
-                  }
-                  disabled={!entry.system || formLocked}
-                >
-                  <option value="">{t('editor.selectTechnique')}</option>
-                  {sortedTechniques
-                    .filter((technique) => technique.system === Number(entry.system))
-                    .map((technique) => (
-                      <option key={technique.id} value={technique.id}>
-                        {technique.title}
+
+          <div className="editor-subsection">
+            <h3>{t('editor.systemKnowledge')}</h3>
+            {systemEntries.map((entry, index) => (
+              <div className="form-row" key={`system-${index}`}>
+                <label>
+                  {t('editor.system')}
+                  <select
+                    value={entry.system}
+                    onChange={(event) => handleSystemChange(index, 'system', event.target.value)}
+                    disabled={formLocked}
+                  >
+                    <option value="">{t('editor.selectSystem')}</option>
+                    {sortedSystems.map((system) => (
+                      <option key={system.id} value={system.id}>
+                        {system.title}
                       </option>
                     ))}
-                </select>
-              </label>
-              <label>
-                {t('editor.notes')}
-                <input
-                  value={entry.notes}
-                  onChange={(event) => handleTechniqueChange(index, 'notes', event.target.value)}
-                  disabled={formLocked}
-                />
-              </label>
-            </div>
-          ))}
-          <button
-            className="secondary-button"
-            type="button"
-            onClick={() => setTechniqueEntries((prev) => [...prev, { ...emptyTechniqueEntry }])}
-            disabled={formLocked}
-          >
-            {t('heroSetup.addTechnique')}
-          </button>
-        </div>
-        <div className="form-actions">
-          <button
-            className="primary-button"
-            type="submit"
-            disabled={saving || formLocked}
-          >
-            {t(isNpcSlot ? 'heroSetup.createNpc' : 'heroSetup.createAvatar')}
-          </button>
-          <button
-            className="secondary-button"
-            type="button"
-            onClick={() => navigate(`/adventures/${runId}/lobby`)}
-          >
-            {t('heroSetup.backToLobby')}
-          </button>
-        </div>
-      </form>
+                  </select>
+                </label>
+                <label>
+                  {t('editor.level')}
+                  <input
+                    type="number"
+                    min="0"
+                    value={entry.level}
+                    onChange={(event) => handleSystemChange(index, 'level', event.target.value)}
+                    disabled={formLocked}
+                  />
+                </label>
+                <label>
+                  {t('editor.progressPercent')}
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={entry.progress_percent}
+                    onChange={(event) =>
+                      handleSystemChange(index, 'progress_percent', event.target.value)
+                    }
+                    disabled={formLocked}
+                  />
+                </label>
+                <label>
+                  {t('editor.notes')}
+                  <input
+                    value={entry.notes}
+                    onChange={(event) => handleSystemChange(index, 'notes', event.target.value)}
+                    disabled={formLocked}
+                  />
+                </label>
+              </div>
+            ))}
+            <button
+              className="secondary-button"
+              type="button"
+              onClick={() => setSystemEntries((prev) => [...prev, { ...emptySystemEntry }])}
+              disabled={formLocked}
+            >
+              {t('heroSetup.addSystem')}
+            </button>
+          </div>
+
+          <div className="editor-subsection">
+            <h3>{t('editor.learnedTechniques')}</h3>
+            {techniqueEntries.map((entry, index) => (
+              <div className="form-row" key={`technique-${index}`}>
+                <label>
+                  {t('editor.system')}
+                  <select
+                    value={entry.system}
+                    onChange={(event) => handleTechniqueChange(index, 'system', event.target.value)}
+                    disabled={formLocked}
+                  >
+                    <option value="">{t('editor.selectSystem')}</option>
+                    {availableSystemIds.map((systemId) => (
+                      <option key={systemId} value={systemId}>
+                        {systemsById[systemId]?.title || '—'}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  {t('editor.technique')}
+                  <select
+                    value={entry.technique}
+                    onChange={(event) =>
+                      handleTechniqueChange(index, 'technique', event.target.value)
+                    }
+                    disabled={!entry.system || formLocked}
+                  >
+                    <option value="">{t('editor.selectTechnique')}</option>
+                    {sortedTechniques
+                      .filter((technique) => technique.system === Number(entry.system))
+                      .map((technique) => (
+                        <option key={technique.id} value={technique.id}>
+                          {technique.title}
+                        </option>
+                      ))}
+                  </select>
+                </label>
+                <label>
+                  {t('editor.notes')}
+                  <input
+                    value={entry.notes}
+                    onChange={(event) => handleTechniqueChange(index, 'notes', event.target.value)}
+                    disabled={formLocked}
+                  />
+                </label>
+              </div>
+            ))}
+            <button
+              className="secondary-button"
+              type="button"
+              onClick={() => setTechniqueEntries((prev) => [...prev, { ...emptyTechniqueEntry }])}
+              disabled={formLocked}
+            >
+              {t('heroSetup.addTechnique')}
+            </button>
+          </div>
+
+          <div className="form-actions">
+            <button
+              className="primary-button"
+              type="submit"
+              disabled={saving || formLocked}
+            >
+              {t(isNpcSlot ? 'heroSetup.createNpc' : 'heroSetup.createAvatar')}
+            </button>
+            <button
+              className="secondary-button"
+              type="button"
+              onClick={() => navigate(`/adventures/${runId}/lobby`)}
+            >
+              {t('heroSetup.backToLobby')}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

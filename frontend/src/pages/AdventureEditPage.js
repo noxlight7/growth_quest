@@ -765,10 +765,11 @@ function AdventureEditPage({ user, apiBaseUrl, authRequest, entityScope = 'templ
   }
 
   return (
-    <div className="adventure-editor">
-      <div className="editor-header">
+    <div className="adventure-editor app-workspace">
+      <div className="editor-header app-page-top">
         <div>
-          <h2>{adventure ? adventure.title : t('editor.title')}</h2>
+          <span className="dashboard-kick">{isTemplate ? t('templates.yourTemplates') : t('templates.startedRuns')}</span>
+          <h1 className="app-page-title">{adventure ? adventure.title : t('editor.title')}</h1>
           <p className="editor-subtitle">
             {readOnly
               ? t('editor.readOnly')
