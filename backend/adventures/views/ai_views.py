@@ -60,11 +60,14 @@ def _generate_ai_entry(
             _, npc_characters = _split_party_characters(adventure)
             npc_names = [character.title for character in npc_characters]
             if npc_names:
+                npc_story_word_limit = "40-70"
+                if adventure.story_reduced_text_length:
+                    npc_story_word_limit = "20-40"
                 prompt = _build_npc_generation_prompt(
                     adventure,
                     history_entries,
                     npc_names,
-                    word_limit=word_limit,
+                    word_limit=npc_story_word_limit,
                 )
                 max_tokens = min(1400, base_max_tokens + len(npc_names) * 120)
                 if adventure.story_reduced_text_length:

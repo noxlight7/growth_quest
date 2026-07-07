@@ -27,27 +27,24 @@ MAX_ENTITY_TITLE_CHARS = 160
 MAX_LINKS_PER_ENTITY_TYPE = 8
 NARRATIVE_CONTEXT_TEXT = {
     "ru": (
-        "Релевантная память о нравственных причинно-следственных связях. Используй её, чтобы "
-        "сделать текущую сцену богаче и последовательнее. Пусть доброта, честность, верность, "
-        "смелость и ответственность со временем открывают приятные возможности. Пусть жестокость, "
-        "эксплуатация, предательство и эгоистичный вред создают значимые издержки и закрывают "
-        "возможности через правдоподобную сюжетную причинность. Делай результат разнообразным, "
-        "интересным и встроенным в вымышленный мир, а не механическим. Связанные сущности включены "
-        "только на один уровень; не добавляй рекурсивно их другие воспоминания:\n"
+        "Релевантная память о долгосрочных сюжетных последствиях. Используй её, чтобы сделать "
+        "текущую сцену богаче и последовательнее. Пусть прежние действия влияют на доверие NPC, "
+        "доступную информацию, помощь, риск и доступность сцен через правдоподобную причинность. "
+        "Делай результат разнообразным, интересным и встроенным в вымышленный мир, а не "
+        "механическим. Связанные сущности включены только на один уровень; не добавляй рекурсивно "
+        "их другие воспоминания:\n"
     ),
     "en": (
-        "Relevant moral cause-and-effect memory. Use it to make the current scene richer and "
-        "more coherent. Let kindness, honesty, loyalty, courage, and responsibility open "
-        "satisfying possibilities over time. Let cruelty, exploitation, betrayal, and selfish "
-        "harm create meaningful costs and close possibilities through believable story causality. "
-        "Keep the result varied, interesting, and integrated into the fiction rather than mechanical. "
-        "Linked entities are included one hop deep; do not recursively expand their other memories:\n"
+        "Relevant long-horizon story consequence memory. Use it to make the current scene richer "
+        "and more coherent. Let prior actions affect NPC trust, available information, help, risk, "
+        "and scene availability through believable causality. Keep the result varied, interesting, "
+        "and integrated into the fiction rather than mechanical. Linked entities are included one "
+        "hop deep; do not recursively expand their other memories:\n"
     ),
     "zh-CN": (
-        "相关的道德因果记忆。用它让当前场景更丰富、更连贯。让善良、诚实、忠诚、勇敢和责任感"
-        "随时间开启令人满意的可能性。让残酷、利用、背叛和自私伤害通过可信的剧情因果带来有意义"
-        "的代价并关闭某些可能性。让结果多样、有趣，并融入虚构世界，而不是机械化呈现。关联实体"
-        "只包含一层关系；不要递归展开它们的其他记忆：\n"
+        "相关的长期故事后果记忆。用它让当前场景更丰富、更连贯。让先前行动通过可信的因果关系"
+        "影响 NPC 信任、可用信息、帮助、风险和场景可用性。让结果多样、有趣，并融入虚构世界，"
+        "而不是机械化呈现。关联实体只包含一层关系；不要递归展开它们的其他记忆：\n"
     ),
 }
 CERTAINTY_ORDER = {

@@ -109,19 +109,19 @@ STORY_PROMPT_TEXT = {
             "сосредоточься на безопасности, критической дистанции и доверенной помощи"
         ),
         "safety_fallback": "обращайся с темой {category} осторожно и с поддержкой",
-        "karma_header": "Модуль нравственных причинно-следственных связей (кармы):",
+        "karma_header": "Долгосрочные сюжетные последствия:",
         "karma_memory": (
             "- Пусть запомненные действия и события мира влияют на последующие сцены через "
             "правдоподобную причинность: память NPC, доверие, слухи, информацию, доступную помощь "
             "и доступность сцен."
         ),
         "karma_constructive": (
-            "- Пусть добрые, честные, верные, смелые и ответственные поступки со временем "
-            "открывают более богатые и приятные сюжетные возможности."
+            "- Пусть конструктивные поступки со временем открывают более богатые и приятные "
+            "сюжетные возможности, если это правдоподобно следует из ситуации."
         ),
         "karma_harmful": (
-            "- Пусть жестокость, эксплуатация, предательство и эгоистичный вред приводят к "
-            "значимым долгосрочным издержкам, испорченным отношениям и потерянным возможностям."
+            "- Пусть вредящие другим поступки приводят к правдоподобным издержкам, испорченным "
+            "отношениям и потерянным возможностям, если это следует из ситуации."
         ),
         "karma_declared_outcome": (
             "- Никогда не давай запрошенный результат только потому, что игрок его объявил. "
@@ -136,6 +136,22 @@ STORY_PROMPT_TEXT = {
             "- Делай последствия правдоподобными, разнообразными и драматически интересными. Они "
             "должны ощущаться частью мира, а не механической системой очков."
         ),
+        "narration_boundaries_header": "Границы повествования:",
+        "narration_player_boundary": (
+            "- Не придумывай новые добровольные действия, реплики, решения, мысли, чувства или "
+            "взвешивание вариантов главными героями игроков. Можно разрешать явно заявленные "
+            "игроком действия через успех, сопротивление, цену, частичный результат или неудачу."
+        ),
+        "narration_no_moral_summary": (
+            "- Не пересказывай сцену как моральную развилку и не объясняй варианты в стиле "
+            "`если исправить, то...; если проигнорировать, то...`. Не пиши за игрока, что герой "
+            "чувствует вес решения, обдумывает последствия или взвешивает варианты."
+        ),
+        "narration_external_pressure": (
+            "- Вместо этого показывай только внешние факты: реплики NPC, новую деталь, дедлайн, "
+            "изменение обстановки или конкретное препятствие, которое приглашает следующий ход игрока. "
+            "Оставь выбор открытым для следующего сообщения игрока."
+        ),
         "continue_story": (
             "Сгенерируй следующий абзац истории, логично продолжая сюжет. Не повторяй и не "
             "пересказывай события, уже записанные в истории промтов. Ответ должен быть примерно "
@@ -144,10 +160,11 @@ STORY_PROMPT_TEXT = {
         "party_npcs": "Неписи в партии: {items}.",
         "npc_generation": (
             "Сначала опиши действия и реплики неписей (2-3 предложения на каждую), затем продолжи "
-            "историю одним цельным абзацем. Если в последнем сообщении игрок обращается к неписям "
+            "историю одним коротким внешним абзацем. Если в последнем сообщении игрок обращается к неписям "
             "или задает вопросы и предполагается, что игрок ждёт ответа, а неписи готовы его дать, "
             "хотя бы один из неписей должен ответить прямой репликой в своих действиях. Не управляй "
-            "действиями игроков, только неписями и общим развитием событий. Не повторяй и не "
+            "действиями игроков, только неписями и общим развитием событий. После ответов NPC не "
+            "объясняй выбор игрока: покажи только новую внешнюю деталь, дедлайн или препятствие. Не повторяй и не "
             "пересказывай события, уже записанные в истории промтов. Ответ верни строго в JSON без "
             "пояснений и без блока ```.\n"
         ),
@@ -239,18 +256,18 @@ STORY_PROMPT_TEXT = {
             "critical distance, and trusted support"
         ),
         "safety_fallback": "handle {category} with care and support",
-        "karma_header": "Moral cause-and-effect module (karma):",
+        "karma_header": "Long-horizon story consequences:",
         "karma_memory": (
             "- Let remembered actions and world events affect later scenes through plausible "
             "causality: NPC memory, trust, rumors, information, available help, and scene availability."
         ),
         "karma_constructive": (
-            "- Make kind, honest, loyal, courageous, and responsible actions open richer, more "
-            "satisfying story possibilities over time."
+            "- Let constructive actions open richer, more satisfying story possibilities over time "
+            "when that plausibly follows from the situation."
         ),
         "karma_harmful": (
-            "- Make cruelty, exploitation, betrayal, and selfish harm create meaningful long-term "
-            "costs, damaged relationships, and lost possibilities."
+            "- Let harmful actions create plausible costs, damaged relationships, and lost "
+            "possibilities when that follows from the situation."
         ),
         "karma_declared_outcome": (
             "- Never grant a requested outcome merely because the player declared it. Resolve "
@@ -264,6 +281,22 @@ STORY_PROMPT_TEXT = {
             "- Keep consequences believable, varied, and dramatically interesting. They should "
             "feel like part of the world rather than a mechanical points system."
         ),
+        "narration_boundaries_header": "Narration boundaries:",
+        "narration_player_boundary": (
+            "- Do not invent new voluntary actions, dialogue, decisions, thoughts, feelings, or "
+            "weighing of options for player heroes. You may resolve explicitly declared player "
+            "actions through success, resistance, cost, partial results, or failure."
+        ),
+        "narration_no_moral_summary": (
+            "- Do not summarize the scene as a moral dilemma, and do not explain options in an "
+            "`if they fix it...; if they ignore it...` style. Do not write that a player hero "
+            "feels the weight of the decision, considers the implications, or weighs the options."
+        ),
+        "narration_external_pressure": (
+            "- Instead, show only external facts: NPC dialogue, a newly revealed detail, deadline "
+            "pressure, a change in the scene, or a concrete obstacle that invites the player's next move. "
+            "Leave the choice open for the player's next message."
+        ),
         "continue_story": (
             "Generate the next paragraph of the story as a logical continuation. Do not repeat or "
             "retell events already recorded in the prompt history. The response should be about "
@@ -272,10 +305,11 @@ STORY_PROMPT_TEXT = {
         "party_npcs": "NPCs in the party: {items}.",
         "npc_generation": (
             "First describe the actions and dialogue of the NPCs (2-3 sentences each), then continue "
-            "the story with one coherent paragraph. If the player's latest message addresses the NPCs "
+            "the story with one short external paragraph. If the player's latest message addresses the NPCs "
             "or asks questions and the player is clearly waiting for a response, at least one willing "
             "NPC must answer with direct dialogue in their action. Do not control player actions; "
-            "control only NPCs and the general development of events. Do not repeat or retell events "
+            "control only NPCs and the general development of events. After NPCs answer, do not explain "
+            "the player's choice: show only a new external detail, deadline pressure, or obstacle. Do not repeat or retell events "
             "already recorded in the prompt history. Return strictly valid JSON without explanations "
             "or a ``` block.\n"
         ),
@@ -339,16 +373,20 @@ STORY_PROMPT_TEXT = {
         "safety_sexual": "出现性暴力信号时，不要生成露骨内容；转向安全、支持、同意边界和可信赖的帮助",
         "safety_extremism": "出现极端主义信号时，避免招募、赞扬或战术细节；聚焦安全、批判性距离和可信赖的支持",
         "safety_fallback": "谨慎并以支持性的方式处理 {category}",
-        "karma_header": "道德因果模块：",
+        "karma_header": "长期故事后果：",
         "karma_memory": "- 让被记住的行动和世界事件通过可信的因果关系影响后续场景：NPC 记忆、信任、传闻、信息、可用帮助和场景可用性。",
-        "karma_constructive": "- 让善良、诚实、忠诚、勇敢和负责任的行动随时间开启更丰富、更令人满意的剧情可能性。",
-        "karma_harmful": "- 让残酷、利用、背叛和自私伤害带来有意义的长期代价、受损关系和失去的机会。",
+        "karma_constructive": "- 当情境中合理成立时，让建设性的行动随时间开启更丰富、更令人满意的剧情可能性。",
+        "karma_harmful": "- 当情境中合理成立时，让伤害他人的行动带来可信的代价、受损关系和失去的机会。",
         "karma_declared_outcome": "- 不要仅仅因为玩家宣称某个结果就直接实现它。依据既定世界逻辑决定成功、阻力和代价。",
         "karma_short_term": "- 如果符合世界逻辑，伤害他人的行动可以产生短期战术效果，但反复的残酷行为不能成为无阻力且不断升级的奖励来源。",
         "karma_believable": "- 让后果可信、多样且具有戏剧性。它们应当像世界的一部分，而不是机械的积分系统。",
+        "narration_boundaries_header": "叙事边界：",
+        "narration_player_boundary": "- 不要为玩家主角发明新的自愿行动、台词、决定、想法、感受或权衡。可以根据玩家明确声明的行动判定成功、阻力、代价、部分结果或失败。",
+        "narration_no_moral_summary": "- 不要把场景总结成道德两难，也不要用“如果他们修正……；如果他们忽略……”的方式解释选项。不要写玩家主角感到决定的重量、思考影响或权衡选项。",
+        "narration_external_pressure": "- 只展示外部事实：NPC 对话、新发现的细节、截止时间压力、场景变化或邀请玩家下一步行动的具体障碍。把选择留给玩家的下一条消息。",
         "continue_story": "生成故事的下一个段落，合乎逻辑地延续剧情。不要重复或复述提示历史中已经记录的事件。回复长度约为 {word_limit} 个词。故事续写只能使用简体中文。",
         "party_npcs": "队伍中的 NPC：{items}。",
-        "npc_generation": "首先描述 NPC 的行动和对白（每个 NPC 2-3 句话），然后用一个连贯段落延续故事。如果玩家最后一条消息向 NPC 说话或提问，明显在等待回答，并且 NPC 愿意回答，则至少一个 NPC 必须在行动中直接回应。不要控制玩家的行动，只控制 NPC 和事件的总体发展。不要重复或复述提示历史中已经记录的事件。仅返回严格有效的 JSON，不要附加说明或 ``` 代码块。\n",
+        "npc_generation": "首先描述 NPC 的行动和对白（每个 NPC 2-3 句话），然后用一个简短的外部场景段落延续故事。如果玩家最后一条消息向 NPC 说话或提问，明显在等待回答，并且 NPC 愿意回答，则至少一个 NPC 必须在行动中直接回应。不要控制玩家的行动，只控制 NPC 和事件的总体发展。NPC 回答后，不要解释玩家的选择；只展示新的外部细节、截止时间压力或障碍。不要重复或复述提示历史中已经记录的事件。仅返回严格有效的 JSON，不要附加说明或 ``` 代码块。\n",
         "npc_schema": '格式：{{"npc_actions":[{{"name":"姓名","action":"行动和直接对白"}}],"story":"故事续写"}}\n',
         "npc_story_length": "故事长度约为 {word_limit} 个词。JSON 中的所有文本值只能使用简体中文。",
         "simple_language": "使用简单、清晰的语言和简短的句子。",
@@ -519,6 +557,16 @@ def _build_long_horizon_consequence_text(adventure: Adventure) -> str:
         _story_text(adventure, "karma_declared_outcome"),
         _story_text(adventure, "karma_short_term"),
         _story_text(adventure, "karma_believable"),
+    ]
+    return "\n".join(lines) + "\n\n"
+
+
+def _build_narration_boundary_text(adventure: Adventure) -> str:
+    lines = [
+        _story_text(adventure, "narration_boundaries_header"),
+        _story_text(adventure, "narration_player_boundary"),
+        _story_text(adventure, "narration_no_moral_summary"),
+        _story_text(adventure, "narration_external_pressure"),
     ]
     return "\n".join(lines) + "\n\n"
 
@@ -747,6 +795,7 @@ def _build_common_prompt(adventure: Adventure, history_entries: list[AdventureHi
         locale=adventure.story_locale,
     )
     safety_text = _build_safety_director_text(adventure)
+    narration_boundary_text = _build_narration_boundary_text(adventure)
 
     return (
         f"{hero_text}\n{rules_text}\n{location_text}\n{available_systems_text}\n"
@@ -758,6 +807,7 @@ def _build_common_prompt(adventure: Adventure, history_entries: list[AdventureHi
         f"{narrative_consequence_text}"
         f"{safety_text}"
         f"{history_text}\n\n"
+        f"{narration_boundary_text}"
     )
 
 def _build_generation_prompt(
@@ -773,7 +823,7 @@ def _build_npc_generation_prompt(
     adventure: Adventure,
     history_entries: list[AdventureHistory],
     npc_names: list[str],
-    word_limit: str = "160-200",
+    word_limit: str = "40-70",
 ) -> str:
     base_prompt = _build_common_prompt(adventure, history_entries)
     npc_text = ", ".join(npc_names) if npc_names else "—"
@@ -910,13 +960,12 @@ def _build_card_update_prompt(
             "\"characters\":[1],\"locations\":[2],\"factions\":[3]}]"
         )
         narrative_consequence_rules = (
-            "Moral cause-and-effect module (karma):\n"
+            "Long-horizon story consequence module:\n"
             "- Update narrative_consequences only for events that later scenes could plausibly "
             "react to.\n"
-            "- Preserve morally meaningful actions: help, honesty, loyalty, responsibility, "
-            "cruelty, exploitation, betrayal, and selfish harm.\n"
-            "- Keep enough factual detail for kindness to open richer story possibilities and "
-            "harm to create long-term costs.\n"
+            "- Preserve concrete actions that could affect later trust, information, help, risk, "
+            "access, damaged relationships, or lost possibilities.\n"
+            "- Keep enough factual detail for later scenes to respond through believable causality.\n"
             "- Link each event only to IDs from the current adventure cards.\n"
             "- Do not turn intentions, threats, or conditional actions into completed facts. "
             "Use established only for results explicitly confirmed by the story.\n"

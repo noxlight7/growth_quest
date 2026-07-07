@@ -912,6 +912,10 @@ class LearningServiceTests(TestCase):
         self.assertIn("Scenario-specific instructions:", prompt)
         self.assertIn("Keep the mystery grounded in visible clues.", prompt)
         self.assertIn("Write the story continuation in English only.", prompt)
+        self.assertIn("Narration boundaries:", prompt)
+        self.assertIn("Do not invent new voluntary actions", prompt)
+        self.assertIn("You may resolve explicitly declared player actions", prompt)
+        self.assertIn("Do not summarize the scene as a moral dilemma", prompt)
         self.assertNotIn("Сгенерируй следующий абзац", prompt)
 
     def test_story_generation_prompt_localizes_static_instructions(self):
@@ -954,6 +958,10 @@ class LearningServiceTests(TestCase):
 
         self.assertIn("NPCs in the party: Mira.", prompt)
         self.assertIn("All JSON text values must be in English only.", prompt)
+        self.assertIn("Do not invent new voluntary actions", prompt)
+        self.assertIn("concrete obstacle that invites the player's next move", prompt)
+        self.assertIn("one short external paragraph", prompt)
+        self.assertIn("about 40-70 words", prompt)
 
     def test_generation_prompt_includes_long_horizon_consequence_guidance(self):
         harbor = Location.objects.create(adventure=self.adventure, title="Harbor")
@@ -978,12 +986,12 @@ class LearningServiceTests(TestCase):
 
         prompt = _build_generation_prompt(self.adventure, [])
 
-        self.assertIn("Moral cause-and-effect module (karma)", prompt)
-        self.assertIn("Relevant moral cause-and-effect memory", prompt)
+        self.assertIn("Long-horizon story consequences", prompt)
+        self.assertIn("Relevant long-horizon story consequence memory", prompt)
         self.assertIn("Mira remembers the lantern repair", prompt)
         self.assertIn('"title": "Mira"', prompt)
-        self.assertIn("Make kind, honest, loyal, courageous, and responsible actions", prompt)
-        self.assertIn("Make cruelty, exploitation, betrayal, and selfish harm", prompt)
+        self.assertIn("Let constructive actions open richer", prompt)
+        self.assertIn("Let harmful actions create plausible costs", prompt)
         self.assertIn("do not recursively expand their other memories", prompt)
         self.assertNotIn("Latent goodwill threads", prompt)
 
@@ -1007,8 +1015,8 @@ class LearningServiceTests(TestCase):
         self.assertEqual(analysis.evidence, [])
         self.assertEqual(analysis.narrative_consequences, [])
         self.assertNotIn("Growth director constraints", prompt)
-        self.assertNotIn("Moral cause-and-effect module (karma)", prompt)
-        self.assertNotIn("Relevant moral cause-and-effect memory", prompt)
+        self.assertNotIn("Long-horizon story consequences", prompt)
+        self.assertNotIn("Relevant long-horizon story consequence memory", prompt)
 
     def test_disabled_modules_are_omitted_from_compaction_prompt(self):
         adventure = Adventure.objects.create(
